@@ -48,17 +48,10 @@ public class rvAdapter extends RecyclerView.Adapter<rvAdapter.ViewHolder>{
         holder.rLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: clicked on: " + aList.get(position));
-
-                Toast.makeText(mContext,aList.get(position).user , Toast.LENGTH_SHORT).show(); //When user clicks the rw it will show up the userName
-
-                /*Intent intent = new Intent(mContext, GalleryActivity.class);
-                intent.putExtra("image_url", mImages.get(position));
-                intent.putExtra("image_name", mImageNames.get(position));
-                mContext.startActivity(intent);*/
+            Log.d(TAG, "onClick: clicked on: " + aList.get(position));
+            Toast.makeText(mContext,aList.get(position).user , Toast.LENGTH_SHORT).show(); //When user clicks the rw it will show up the userName
             }
         });
-
     }
 
     @Override

@@ -1,21 +1,31 @@
 package nskmlylm.campusannouncement;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +33,24 @@ import java.util.List;
 public class AnnouncementAct extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "AnnouncementAct";
-
+    private String m_Text = "";
     private List<Announcement> aList;
+    private Context mContext;
+
+    //Timer
+    private Handler mHandler = new Handler();
+    private Runnable checkNewAnnouncements = new Runnable() {
+        public void run() {
+             if(checkConnection(getApplicationContext())) {
+                    //Do your thing here
+                    Log.i("Bilgi","Internet bağlantısı mevcuttur.");
+                }else{
+                    Toast.makeText(getApplicationContext(),"İnternet bağlantınızı kontrol ediniz.", Toast.LENGTH_LONG).show();
+                    Log.i("Bilgi","Internet bağlantısı bulunamadı.");
+                }
+            mHandler.postDelayed(this, 5000);
+        }
+    };
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +65,33 @@ public class AnnouncementAct extends AppCompatActivity implements NavigationView
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(final View view) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(AnnouncementAct.this);
+                builder.setTitle("Duyuru Ekle");
+                View viewInflated = LayoutInflater.from(AnnouncementAct.this).inflate(R.layout.add_announcement_dialog, (ViewGroup) findViewById(android.R.id.content), false);
+
+                final EditText header = (EditText) viewInflated.findViewById(R.id.header);
+                final EditText desc = (EditText) viewInflated.findViewById(R.id.description);
+                builder.setView(viewInflated);
+
+                builder.setPositiveButton("Paylaş", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        m_Text = header.getText().toString() + " \n " + desc.getText().toString();
+                        Snackbar.make(view, m_Text, Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+                    }
+                });
+                builder.setNegativeButton("İptal", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+
             }
         });
 
@@ -55,8 +105,8 @@ public class AnnouncementAct extends AppCompatActivity implements NavigationView
         navigationView.setNavigationItemSelectedListener(this);
 
         aList = new ArrayList<>();
-
         fillTheLists();
+        checkNewAnnouncements.run();
     }
 
     public void fillTheLists(){
@@ -147,4 +197,9 @@ public class AnnouncementAct extends AppCompatActivity implements NavigationView
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    public boolean checkConnection(@NonNull Context context) {
+        return  ((ConnectivityManager) context.getSystemService (Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo() != null;
+    }
+
 }
