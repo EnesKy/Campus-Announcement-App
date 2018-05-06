@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -27,7 +26,9 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class AnnouncementAct extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -35,23 +36,23 @@ public class AnnouncementAct extends AppCompatActivity implements NavigationView
     private static final String TAG = "AnnouncementAct";
     private String m_Text = "";
     private List<Announcement> aList;
-    private Context mContext;
+    private Announcement a;
 
     //Timer
     private Handler mHandler = new Handler();
     private Runnable checkNewAnnouncements = new Runnable() {
         public void run() {
-             if(checkConnection(getApplicationContext())) {
-                    //Do your thing here
-                    Log.i("Bilgi","Internet bağlantısı mevcuttur.");
-                }else{
-                    Toast.makeText(getApplicationContext(),"İnternet bağlantınızı kontrol ediniz.", Toast.LENGTH_LONG).show();
-                    Log.i("Bilgi","Internet bağlantısı bulunamadı.");
-                }
+            if (checkConnection(getApplicationContext())) {
+                //Do your thing here
+                Log.i("Bilgi", "Internet bağlantısı mevcuttur.");
+            } else {
+                Toast.makeText(getApplicationContext(), "İnternet bağlantınızı kontrol ediniz.", Toast.LENGTH_LONG).show();
+                Log.i("Bilgi", "Internet bağlantısı bulunamadı.");
+            }
             mHandler.postDelayed(this, 5000);
         }
     };
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -80,7 +81,16 @@ public class AnnouncementAct extends AppCompatActivity implements NavigationView
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         m_Text = header.getText().toString() + " \n " + desc.getText().toString();
-                        Snackbar.make(view, m_Text, Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+                        Calendar c = Calendar.getInstance();
+                        SimpleDateFormat dateformat = new SimpleDateFormat("dd.MM.yyyy hh:mm");
+                        String date = dateformat.format(c.getTime());
+
+                        a = new Announcement("Deneme", header.getText().toString(), desc.getText().toString(), date);
+                        aList.add(a);
+
+                        createRV();
+
+                        //Snackbar.make(view, m_Text, Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                     }
                 });
                 builder.setNegativeButton("İptal", new DialogInterface.OnClickListener() {
@@ -109,10 +119,16 @@ public class AnnouncementAct extends AppCompatActivity implements NavigationView
         checkNewAnnouncements.run();
     }
 
-    public void fillTheLists(){
+    public void fillTheLists() {
         Log.d(TAG, "fillTheLists method worked.");
 
-        Announcement a = new Announcement("Mert Dönmez", "Başlık 1", "Fenerbahçe ŞAMPİYON", "06.05.2018");
+        /*
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat dateformat = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss");
+            String date = dateformat.format(c.getTime());
+        */
+
+        a = new Announcement("Mert Dönmez", "Başlık 1", "Fenerbahçe ŞAMPİYON", "06.05.2018");
         aList.add(a);
 
         a = new Announcement("Salim Şahin", "Başlık 2", "3 Boyutlu yazıcı falan", "06.05.2018");
@@ -127,12 +143,13 @@ public class AnnouncementAct extends AppCompatActivity implements NavigationView
         a = new Announcement("Bedirhan Yıldırım", "Başlık 5", "Hooded Guy", "06.05.2018");
         aList.add(a);
 
-        createRW();
+        createRV();
 
     }
 
-    public void createRW(){
-        Log.d(TAG, "initRecyclerView: init recyclerview.");
+    public void createRV() {
+        Log.d(TAG, "createRV method worked.");
+
         RecyclerView rv = findViewById(R.id.recyclerView);
         rvAdapter adapter = new rvAdapter(this, aList);
         adapter.notifyDataSetChanged();
@@ -179,18 +196,16 @@ public class AnnouncementAct extends AppCompatActivity implements NavigationView
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.nav_muhF) {
+            Toast.makeText(getApplicationContext(), "Mühendislik", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.nav_mimarF) {
+            Toast.makeText(getApplicationContext(), "Mimarlık", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.nav_hukukF) {
+            Toast.makeText(getApplicationContext(), "Hukuk", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.nav_edebiyatF) {
+            Toast.makeText(getApplicationContext(), "Edebiyat", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.genel) {
+            Toast.makeText(getApplicationContext(), "Genel", Toast.LENGTH_SHORT).show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -199,7 +214,7 @@ public class AnnouncementAct extends AppCompatActivity implements NavigationView
     }
 
     public boolean checkConnection(@NonNull Context context) {
-        return  ((ConnectivityManager) context.getSystemService (Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo() != null;
+        return ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo() != null;
     }
 
 }

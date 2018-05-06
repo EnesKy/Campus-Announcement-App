@@ -16,7 +16,6 @@ import android.widget.Toast;
 import java.util.List;
 
 public class rvAdapter extends RecyclerView.Adapter<rvAdapter.ViewHolder>{
-
     private static final String TAG = "rvAdapter";
     private Context mContext;
     List<Announcement> aList;
@@ -58,7 +57,6 @@ public class rvAdapter extends RecyclerView.Adapter<rvAdapter.ViewHolder>{
     public int getItemCount() {
         return aList.size();
     }
-
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         //This hold the elements of the recycler view.
