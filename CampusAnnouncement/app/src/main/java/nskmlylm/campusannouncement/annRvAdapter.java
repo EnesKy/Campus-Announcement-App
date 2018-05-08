@@ -1,6 +1,7 @@
 package nskmlylm.campusannouncement;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,12 +16,12 @@ import android.widget.Toast;
 
 import java.util.List;
 
-public class rvAdapter extends RecyclerView.Adapter<rvAdapter.ViewHolder>{
-    private static final String TAG = "rvAdapter";
+public class annRvAdapter extends RecyclerView.Adapter<annRvAdapter.ViewHolder>{
+    private static final String TAG = "annRvAdapter";
     private Context mContext;
-    List<Announcement> aList;
+    List<Announcements> aList;
 
-    public rvAdapter(Context mContext, List<Announcement> aList){
+    public annRvAdapter(Context mContext, List<Announcements> aList){
         this.mContext = mContext;
         this.aList = aList;
     }
@@ -28,7 +29,7 @@ public class rvAdapter extends RecyclerView.Adapter<rvAdapter.ViewHolder>{
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_row, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ann_recyclerview_row, parent, false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
@@ -49,6 +50,12 @@ public class rvAdapter extends RecyclerView.Adapter<rvAdapter.ViewHolder>{
             public void onClick(View view) {
             Log.d(TAG, "onClick: clicked on: " + aList.get(position));
             Toast.makeText(mContext,aList.get(position).user , Toast.LENGTH_SHORT).show(); //When user clicks the rw it will show up the userName
+                Intent j = new Intent(mContext, CommentAct.class);
+                j.putExtra("user",aList.get(position).user);
+                j.putExtra("header",aList.get(position).header);
+                j.putExtra("desc",aList.get(position).desc);
+                j.putExtra("date",aList.get(position).date);
+                mContext.startActivity(j);
             }
         });
     }
@@ -71,8 +78,8 @@ public class rvAdapter extends RecyclerView.Adapter<rvAdapter.ViewHolder>{
             header = itemView.findViewById(R.id.header);
             desc = itemView.findViewById(R.id.description);
             date = itemView.findViewById(R.id.date);
-            addComm = itemView.findViewById(R.id.addComment);
-            comm = itemView.findViewById(R.id.commentsB);
+            //addComm = itemView.findViewById(R.id.addComment);
+            //comm = itemView.findViewById(R.id.commentsB);
             rLayout = itemView.findViewById(R.id.Rlayout);
         }
     }

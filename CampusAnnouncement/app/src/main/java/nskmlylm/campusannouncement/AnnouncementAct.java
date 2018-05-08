@@ -2,6 +2,7 @@ package nskmlylm.campusannouncement;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,8 +36,8 @@ public class AnnouncementAct extends AppCompatActivity implements NavigationView
 
     private static final String TAG = "AnnouncementAct";
     private String m_Text = "";
-    private List<Announcement> aList;
-    private Announcement a;
+    private List<Announcements> aList;
+    private Announcements a;
 
     //Timer
     private Handler mHandler = new Handler();
@@ -55,11 +56,12 @@ public class AnnouncementAct extends AppCompatActivity implements NavigationView
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        Intent j = getIntent();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN); // This prevents the keyboard opening at the beginning.
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announcement);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -85,7 +87,7 @@ public class AnnouncementAct extends AppCompatActivity implements NavigationView
                         SimpleDateFormat dateformat = new SimpleDateFormat("dd.MM.yyyy hh:mm");
                         String date = dateformat.format(c.getTime());
 
-                        a = new Announcement("Deneme", header.getText().toString(), desc.getText().toString(), date);
+                        a = new Announcements("Deneme", header.getText().toString(), desc.getText().toString(), date);
                         aList.add(a);
 
                         createRV();
@@ -128,19 +130,26 @@ public class AnnouncementAct extends AppCompatActivity implements NavigationView
             String date = dateformat.format(c.getTime());
         */
 
-        a = new Announcement("Mert Dönmez", "Başlık 1", "Fenerbahçe ŞAMPİYON", "06.05.2018");
+        a = new Announcements("Mert Dönmez", "Bilgisayar Mimarisi Dersi Telafi Quizleri", "15 Mayıs tarihli derste telafi ve mazeret quizleri yapılacaktır. Duyurulur...", "06.05.2018");
         aList.add(a);
 
-        a = new Announcement("Salim Şahin", "Başlık 2", "3 Boyutlu yazıcı falan", "06.05.2018");
+        a = new Announcements("Derya Malkoç", "Fizik 1 Ders İptali", "25.04.2018 perşembe günü saat 9.00’daki Fizik dersi yapılmayacaktır.\n Sadullah Hoca’nın duyurusudur. Bilgilerinize sunulur.", "06.05.2018");
         aList.add(a);
 
-        a = new Announcement("Bilal Ekrem Harmanşa", "Başlık 3", "Amaç öğrenmek", "06.05.2018");
+        a = new Announcements("Salim Şahin", "Etkinlik", "20 Nisan 2018 Cuma günü Saat 14.00'da D-115 'te Samet Karadağ'ın katılımı ile \"Büyük veri,AI,IOT,Chatbot ve Blockchain\" konulu programımız olacaktır.IEEEFSMVU Student Branch olarak sizleri de programımızda görmekten mutluluk duyarız.", "06.05.2018");
         aList.add(a);
 
-        a = new Announcement("Furkan Sarıhan", "Başlık 4", "VR ulan", "06.05.2018");
+        a = new Announcements("Ali Nizam", "Siber Terör CTF Yarışması", "Gazi Üniversitesi, gençlerimizin ilgisini Siber Güvenlk alanına çekmek ve siber saldırılarla mücadele edebilecek insan kaynağı geliştirmek amacıyla \"Gazi Siber Güç CTF Yarışması\" düzenlenmektedir. \n" +
+                "Bu konuda yeteneği olan herkese açık olan bu yarışmada, dereceye giren yarışmacılara toplamda 20.000 TL ödül verilecektir.\n" +
+                "\n" +
+                "Yarışmaya son başvuru tarihi 5 Nisan 2018'dir.", "06.05.2018");
         aList.add(a);
 
-        a = new Announcement("Bedirhan Yıldırım", "Başlık 5", "Hooded Guy", "06.05.2018");
+        a = new Announcements("Ali Nizam", "BLM104 Dersi dönem ödev kontrolleri", "BLM104 Dersi dönem ödev kontrolleri \n" +
+                "--Numarası sonu tek olan öğrencilerimiz için Kadir Aram\n" +
+                "--Çift olan öğrencilerimiz için Okan Kara tarafından yapılacaktır.\n" +
+                "Son tarih vize sınavından bir gün öncesidir.\n" +
+                "Saygılarımla.", "06.05.2018");
         aList.add(a);
 
         createRV();
@@ -151,7 +160,7 @@ public class AnnouncementAct extends AppCompatActivity implements NavigationView
         Log.d(TAG, "createRV method worked.");
 
         RecyclerView rv = findViewById(R.id.recyclerView);
-        rvAdapter adapter = new rvAdapter(this, aList);
+        annRvAdapter adapter = new annRvAdapter(this, aList);
         adapter.notifyDataSetChanged();
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(this));

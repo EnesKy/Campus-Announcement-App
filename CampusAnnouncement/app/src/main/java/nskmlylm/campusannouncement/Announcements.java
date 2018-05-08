@@ -1,9 +1,9 @@
 package nskmlylm.campusannouncement;
 
-public class Announcement {
+public class Announcements {
     String user, header, desc, date;
 
-    public Announcement(String user, String header, String desc, String date) {
+    public Announcements(String user, String header, String desc, String date) {
         this.user = user; this.header = header; this.desc = desc; this.date = date;
     }
 
